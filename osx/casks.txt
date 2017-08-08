@@ -1,0 +1,5 @@
+dropbox
+firefox
+google-chrome
+iterm2
+the-unarchiver
