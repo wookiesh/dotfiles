@@ -2,6 +2,11 @@ require("miro-windows-management")
 
 -- Global config
 hs.window.animationDuration = 0
+super = {"ctrl","alt"}
+
+-- Reload config
+hs.hotkey.bind(hyper, "R", hs.reload)
+hs.alert.show("Config loaded")
 
 -- # Window management (Complement to Miro)
 -- multi monitor
@@ -63,6 +68,11 @@ local function ssidChangedCallback()
         startTime = nil
         timer.stop()
         timer = nil
+
+        hs.application.find("outlook"):kill()
+        hs.application.find("onedrive"):kill()
+        hs.application.find("skype"):kill()
+      
       end
 
       -- Work Network
@@ -77,5 +87,3 @@ local function ssidChangedCallback()
 end
 
 hs.wifi.watcher.new(ssidChangedCallback):start()
-
-
