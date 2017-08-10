@@ -21,6 +21,9 @@ hs.hotkey.bind(hyper, 'L', hs.grid.pushWindowRight)
 -- Window Hints
 hs.hotkey.bind(hyper, '=', hs.hints.windowHints)
 
+-- Lock screen
+hs.hotkey.bind(super, "L", hs.caffeinate.lockScreen)
+
 -- Wifi Watcher
 local lastNetwork = nil
 local menuItem = nil
