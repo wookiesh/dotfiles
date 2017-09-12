@@ -7,7 +7,7 @@
 	excludesfile = ~/.gitignore_global
 
 [merge]
-	tool = vimdiff
+	tool = sublime
 
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -39,3 +39,6 @@
 
 [credential]
 	helper = osxkeychain
+[mergetool "sublime"]
+	cmd = subl -w $MERGED
+	trustExitCode = false

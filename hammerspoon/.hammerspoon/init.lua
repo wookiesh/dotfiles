@@ -6,6 +6,7 @@ super = {"ctrl","alt"}
 
 -- Reload config
 hs.hotkey.bind(hyper, "R", hs.reload)
+hs.hotkey.bind(hyper, "C", function() hs.application.open("Hammerspoon") end)
 hs.alert.show("Config loaded")
 
 -- # Window management (Complement to Miro)
@@ -24,11 +25,22 @@ hs.hotkey.bind(hyper, '=', hs.hints.windowHints)
 -- Lock screen
 hs.hotkey.bind(super, "L", hs.caffeinate.lockScreen)
 
--- Wifi Watcher
-local lastNetwork = nil
-local menuItem = nil
-local startTime = nil
-local timer = nil
+function trim(s)
+  return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
+-- Send start to goole sheet
+local function startTimer()
+  menu:setTitle('@' .. hs.wifi.currentNetwork() .. ' ' .. trim(hs.execute('cd ~/Work/time; /Users/joseph/.virtualenvs/time/bin/python ~/Work/time/tracker.py start')))
+  timer:start()
+end
+
+-- send stop to google sheet
+local function stopTimer()
+  menu:setTitle("@" .. hs.wifi.currentNetwork())
+  hs.execute('cd ~/Work/time; /Users/joseph/.virtualenvs/time/bin/python ~/Work/time/tracker.py stop')
+  timer:stop()
+end
 
 -- util string function to display time
 function SecondsToClock(seconds)
@@ -44,6 +56,16 @@ function SecondsToClock(seconds)
   end
 end
 
+-- try to find and kill apps in list
+function kill(list)
+  for i, name in ipairs(list) do
+    local app = hs.application.get(name)
+    if app ~= nil then
+      app:kill()
+    end
+  end
+end
+
 -- callback called when wifi network changes
 local function ssidChangedCallback()
     local newNetwork = hs.wifi.currentNetwork()
@@ -51,42 +73,42 @@ local function ssidChangedCallback()
 
     -- send notification if we're on a different network than we were before
     if lastNetwork ~= newNetwork then
-      hs.notify.new({
-        title = 'Wi-Fi Status',
-        subTitle = newNetwork and 'Network:' or 'Disconnected',
-        informativeText = newNetwork and 'Now connected to ' .. newNetwork or '',
-        --contentImage = m.cfg.icon,
-        autoWithdraw = true,
-        hasActionButton = false,
-      }):send()
-
+      -- hs.notify.new({
+      --   title = 'Wi-Fi Status',
+      --   subTitle = 'Network',
+      --   informativeText = 'Now connected to ' .. newNetwork,
+      --   --contentImage = m.cfg.icon,
+      --   autoWithdraw = true,
+      --   hasActionButton = false,
+      -- }):send()
       lastNetwork = newNetwork
-      print("ssidChangedCallback: old:"..(lastNetwork or "nil").." new:"..(newNetwork or "nil"))
+
+      menu:setTitle('@'..newNetwork)
 
       -- Home Network
       if newNetwork == "ehuuuuesh" then
         hs.audiodevice.current().device:setOutputMuted(false)
-        menuItem:removeFromMenuBar()
-        menuItem = nil
-        startTime = nil
-        timer.stop()
-        timer = nil
 
-        hs.application.find("outlook"):kill()
-        hs.application.find("onedrive"):kill()
-        hs.application.find("skype"):kill()
-      
+        kill({"Skype for Business", "Microsoft Outlook", "OneDrive - Goodyear"})  
       end
 
       -- Work Network
       if newNetwork == "goweb" then
-        hs.audiodevice.current().device:setOutputMuted(true)
-        menuItem = hs.menubar.new()
-        menuItem:setTitle("@Work..")
-        startTime = os.time()
-        timer = hs.timer.doEvery(60, function() menuItem:setTitle("@Work - " .. SecondsToClock(os.time()-startTime)) end )        
+        hs.audiodevice.current().device:setOutputMuted(true)        
+        startTimer()
       end
     end
 end
 
+-- Wifi Watcher
+local lastNetwork = nil
+menu = hs.menubar.new(false)
+timer = hs.timer.new(60, startTimer)
 hs.wifi.watcher.new(ssidChangedCallback):start()
+
+-- test 
+menu:setTitle("@" .. hs.wifi.currentNetwork())
+menu:setMenu({
+  {title="Start", fn = startTimer},
+  {title="Stop", fn = stopTimer}
+})
