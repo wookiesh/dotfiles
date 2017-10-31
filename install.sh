@@ -4,7 +4,7 @@
 # TODO: command to be set according to system then install same main essentials
 
 # Linux
-#apt get install stow vim ripgrep httpie zsh tldr npm python3 pygmentize npm jqtmux
+apt get install stow vim ripgrep httpie zsh tldr npm python3 pygmentize npm jqtmux
 
 # Osx
 # install brew, cask
