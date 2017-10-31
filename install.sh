@@ -4,13 +4,19 @@
 # TODO: command to be set according to system then install same main essentials
 
 # Linux
-apt get install stow vim ripgrep httpie zsh tldr npm python3 pygmentize npm jqtmux
+apt install stow vim ag httpie zsh python3 npm 
 
 # Osx
 # install brew, cask
 
-# brew install coreutils git macvim stow ripgrep httpie zsh tldr
+# Unix
+chsh -s `which zsh`
+
+# brew install coreutils git macvim stow ripgrep httpie zsh tldr jqtmux
 # brew cask install SourceTree
+
+# Python
+sudo pip3 install Pygments
 
 # Stow magic
 # for i ...
