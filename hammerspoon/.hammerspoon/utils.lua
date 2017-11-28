@@ -29,4 +29,12 @@ function m.kill(list)
   end
 end
 
+function m.ToggleWifi()
+  if select(4, hs.execute('networksetup -getairportpower en0|grep On')) == 0 then
+    hs.execute('networksetup -setairportpower airport off')
+  else
+    hs.execute('networksetup -setairportpower airport on')
+  end
+end
+
 return m

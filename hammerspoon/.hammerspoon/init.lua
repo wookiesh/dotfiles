@@ -31,6 +31,9 @@ hs.hotkey.bind(hyper, '=', hs.hints.windowHints)
 -- Lock screen
 hs.hotkey.bind(super, "L", hs.caffeinate.lockScreen)
 
+-- Toggle Wifi
+hs.hotkey.bind(super, "w", utils.ToggleWifi)
+
 -- callback called when wifi network changes
 local function ssidChangedCallback()
     local newNetwork = hs.wifi.currentNetwork()
@@ -40,19 +43,28 @@ local function ssidChangedCallback()
     if lastNetwork ~= newNetwork then
       lastNetwork = newNetwork
 
-      menu:setTitle('@'..newNetwork)
+      ts.menu:setTitle('@'..newNetwork)
 
       -- Home Network
       if newNetwork == "ehuuuuesh" then
         hs.audiodevice.current().device:setOutputMuted(false)
-
         utils.kill({"Skype for Business", "Microsoft Outlook", "OneDrive - Goodyear"})  
       end
 
       -- Work Network
       if newNetwork == "goweb" then
         hs.audiodevice.current().device:setOutputMuted(true)        
-        startTimer()
+        ts.startTimer()
+        hs.osascript.applescript([[
+          tell application "Finder"
+            try
+              mount volume "smb://aa02800:colmar03@lutnas01.lu.goodyear.com/data"
+              mount volume "http://aa02800:colmar03@svn.lu.goodyear.com/backup"
+              mount volume "http://aa02800:colmar03@svn.lu.goodyear.com/layoutstireplant"
+            end try
+          end tell
+        ]])
+
       end
     end
 end
@@ -62,4 +74,4 @@ local lastNetwork = nil
 hs.wifi.watcher.new(ssidChangedCallback):start()
 
 -- Spoons
-hs.loadSpoon('speedmenu')
+-- hs.loadSpoon('speedmenu')
