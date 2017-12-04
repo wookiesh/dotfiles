@@ -4,7 +4,7 @@
 # TODO: command to be set according to system then install same main essentials
 
 # Linux
-apt install stow vim ag httpie zsh python3 npm 
+apt install stow vim silversearcher-ag httpie zsh python3 npm 
 
 # Osx
 # install brew, cask
