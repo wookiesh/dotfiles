@@ -1,0 +1,18 @@
+[user]
+	name = Joseph Piron
+	email = joseph.piron@gmail.com
+[core]
+	quotepath = false
+	#editor = subl -n -w
+	excludesfile = ~/.gitignore_global
+
+[alias]
+	ci = commit
+	co = checkout
+	br = branch
+	co = checkout
+	st = status
+	lg = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s   %Cgreen(%an %ar)%Creset'
+
+[color]
+    ui = auto
