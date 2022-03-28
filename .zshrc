@@ -45,8 +45,8 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Load zsh-syntax-highlighting; should be last.
-source /usr/local/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-
+[ -f "/usr/local/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ] && source "/usr/local/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+[ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" 
 
 export PATH="$HOME/.poetry/bin:$HOME/.yarn/bin:$PATH"
 
