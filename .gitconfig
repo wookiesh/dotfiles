@@ -13,6 +13,16 @@
 	co = checkout
 	st = status
 	lg = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s   %Cgreen(%an %ar)%Creset'
+	msg = commit --allow-empty -m
+	count = shortlog -sn
+	undo = reset --soft HEAD^
 
 [color]
     ui = auto
+	status = auto
+	branch = auto
+	diff = auto
+[help]
+	autocorrect = 1
+[rerere]
+	enabled = 1
