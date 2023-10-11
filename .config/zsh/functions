@@ -1,0 +1,77 @@
+rcd () {
+    tmp="$(mktemp)"
+    ranger --choosedir="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+    fi
+}
+
+rcode() { code --folder-uri=vscode-remote://ssh-remote+$1/$2 }
+
+vpn() {
+
+}
+
+# Update brew, fish, fisher and mac app store
+update() {
+    echo 'start updating ...'
+
+    echo 'updating homebrew'
+    brew update
+    brew upgrade
+    brew cleanup
+
+    echo 'updating fish shell'
+    fisher update
+    fish_update_completions
+
+    echo 'updating apple store apps'
+    echo 'checking Apple Updates'
+    /usr/sbin/softwareupdate -ia
+}
+
+# Open a Fortinet ssl tunnel
+vpn() {
+    echo "search ana.lu airportlu.local" | sudo tee /etc/resolver/ana
+    echo "domain airportlu.local" | sudo tee -a /etc/resolver/ana
+    sudo openfortivpn -c ~/.config/openfortivpn/config
+    sudo rm /etc/resolver/ana
+}
+
+# Unlock bitwarden vault and persist session
+function bwu() {
+    BW_STATUS=$(bw status | jq -r .status)
+    case "$BW_STATUS" in
+    "unauthenticated")
+        echo "Logging into BitWarden"
+        export BW_SESSION=$(bw login --raw)
+        echo "export BW_SESSION=$BW_SESSION" > ~/.config/bwcli # or dangerous ? => bw lock
+        ;;
+    "locked")
+        echo "Unlocking Vault"
+        export BW_SESSION=$(bw unlock --raw)
+        echo "export BW_SESSION=$BW_SESSION" > ~/.config/bwcli # or dangerous ? => bw lock
+        ;;
+    "unlocked")
+        echo "Vault is unlocked"
+        ;;
+    *)
+        echo "Unknown Login Status: $BW_STATUS"
+        return 1
+        ;;
+    esac
+    bw sync
+}
+
+# display a neatly formatted path
+path() {
+  echo $PATH | tr ":" "\n" | \
+    awk "{ sub(\"/usr\",   \"$fg_no_bold[green]/usr$reset_color\"); \
+           sub(\"/bin\",   \"$fg_no_bold[blue]/bin$reset_color\"); \
+           sub(\"/opt\",   \"$fg_no_bold[cyan]/opt$reset_color\"); \
+           sub(\"/sbin\",  \"$fg_no_bold[magenta]/sbin$reset_color\"); \
+           sub(\"/local\", \"$fg_no_bold[yellow]/local$reset_color\"); \
+           print }"
+}

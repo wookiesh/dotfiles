@@ -1,0 +1,48 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Don't print a new line at the start of the prompt
+add_newline = true
+
+# Directory on second line
+# format = '$all$directory$character'
+
+[battery]
+full_symbol = "🔋"
+charging_symbol = "🔌"
+discharging_symbol = "⚡"
+
+[hostname]
+# format = "[$hostname](bold green) "
+ssh_symbol = "🌐"
+ssh_only = false
+format = '[$ssh_symbol$hostname]($style) '
+
+[git_status]
+# conflicted = "🏳  "
+# ahead = "🏎 💨 "
+# behind = "😰 "
+# diverged = "😵 "
+# stashed = "📦 "
+# modified = "📝 "
+# staged = '[++\($count\)](green)'
+# renamed = "👅 "
+# deleted = "🗑  "
+
+[directory]
+truncate_to_repo = false
+truncation_length = 3                                        # parent directories to show; default is 3
+truncation_symbol = "…/"
+format = 'in [$path]($style)[$read_only]($read_only_style) '
+
+[shlvl]
+threshold = 2
+disabled = false
+symbol = "↕️ "
+
+[status]
+disabled = false
+format = '[\[$status - $common_meaning\]](red) '
+
+[username]
+format = "[$user]($style) on "
