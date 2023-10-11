@@ -26,3 +26,10 @@
 	autocorrect = 1
 [rerere]
 	enabled = 1
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[push]
+	atomic = true
+	followTags = true
