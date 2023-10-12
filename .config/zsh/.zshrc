@@ -32,7 +32,7 @@ setopt HIST_VERIFY               # Do not execute immediately upon history expan
 zmodload zsh/complist			# for menuselect
 
 # Basic auto/tab complete:
-fpath+=$ZDOTDIR/.zfunc
+fpath+=$ZDOTDIR/completions
 autoload -Uz compinit
 zstyle ':completion:*' menu select
 
