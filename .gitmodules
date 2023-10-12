@@ -7,3 +7,6 @@
 [submodule ".config/zsh/plugins/zsh-completions"]
 	path = .config/zsh/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions
+[submodule ".config/zsh/plugins/fzf-zsh-plugin"]
+	path = .config/zsh/plugins/fzf-zsh-plugin
+	url = https://github.com/unixorn/fzf-zsh-plugin.git
