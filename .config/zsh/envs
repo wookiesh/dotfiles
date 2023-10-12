@@ -1,0 +1,20 @@
+export HISTFILE=$HOME/.cache/zsh/history    # History filepath
+export HISTSIZE=10000                       # Maximum events for internal history
+export SAVEHIST=10000                       # Maximum events in history file
+
+# path
+typeset -Ux path PATH # Unique, eXport
+path=('~/.local/bin' $path)
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Nicer pager
+export BAT_THEME=Dracula
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# editor
+export EDITOR="vim"
+export VISUAL="vim"

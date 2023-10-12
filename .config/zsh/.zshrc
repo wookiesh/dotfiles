@@ -95,11 +95,14 @@ bindkey "^[^[[D" backward-word  # alt cursor left
 # +-------------+
 # | Other stuff |
 # +-------------+
+echo $HISTFILE
 
 # Load aliases and shortcuts if existent.
 [ -f "$ZDOTDIR/aliases" ] && source "$ZDOTDIR/aliases"
 [ -f "$ZDOTDIR/functions" ] && source "$ZDOTDIR/functions"
+[ -f "$ZDOTDIR/envs" ] && source "$ZDOTDIR/envs"
 
+echo $HISTFILE
 # Load bitwarden cli config
 [ -f "$HOME/.config/bwcli" ] && source "$HOME/.config/bwcli"
 
@@ -131,10 +134,10 @@ setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
 setopt PUSHD_IGNORE_DUPS	# Remove duplicate entries
 setopt PUSHD_MINUS			# Reverts the +/- operators
 
-# +---------------------+
-# | Syntax highlighting |
-# +---------------------+
+# +----------------+
+# | Git submodules |
+# +----------------+
 
-# # should be last.
-# [ -f "/usr/local/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ] && source "/usr/local/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
-# [ -f "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
