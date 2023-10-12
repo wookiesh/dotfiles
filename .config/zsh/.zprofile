@@ -1,1 +1,2 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
+ [ $IS_MACOS ] &&  eval "$(/opt/homebrew/bin/brew shellenv)"

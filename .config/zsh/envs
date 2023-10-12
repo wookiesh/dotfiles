@@ -1,5 +1,7 @@
 export DOTFILES="$HOME/.dotfiles"
 
+[[ $OSTYPE == "darwin"* ]] && export IS_MACOS=true
+
 export HISTFILE=$HOME/.cache/zsh/history    # History filepath
 export HISTSIZE=10000                       # Maximum events for internal history
 export SAVEHIST=10000                       # Maximum events in history file

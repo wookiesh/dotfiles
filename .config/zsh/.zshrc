@@ -117,6 +117,7 @@ bindkey "^[^[[D" backward-word  # alt cursor left
 autoload -Uz add-zsh-hook
 
 DIRSTACKFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dirs"
+mkdir -p $(dirname $DIRSTACKFILE)
 if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
 	dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
 	[[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}"
