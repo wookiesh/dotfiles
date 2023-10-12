@@ -1,6 +1,3 @@
-# Dotfiles
-alias dtf='/usr/bin/git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-
 # ls goodies
 if `which exa >/dev/null`
 then

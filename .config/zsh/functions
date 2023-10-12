@@ -1,3 +1,8 @@
+# Dotfiles alias to handle bare repo based versioning.
+dtf () {
+  git --git-dir="$DOTFILES" --work-tree="$HOME" "$@"
+}
+
 rcd () {
     tmp="$(mktemp)"
     ranger --choosedir="$tmp" "$@"
