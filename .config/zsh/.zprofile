@@ -1,2 +1,2 @@
 
- [ $IS_MACOS ] &&  eval "$(/opt/homebrew/bin/brew shellenv)"
+[[ $OSTYPE == "darwin"* ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
