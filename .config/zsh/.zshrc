@@ -100,6 +100,7 @@ bindkey "^[^[[D" backward-word  # alt cursor left
 [ -f "$ZDOTDIR/aliases" ] && source "$ZDOTDIR/aliases"
 [ -f "$ZDOTDIR/envs" ] && source "$ZDOTDIR/envs"
 [ -f "$ZDOTDIR/functions" ] && source "$ZDOTDIR/functions"
+[ -f "$ZDOTDIR/local" ] && source "$ZDOTDIR/local"
 
 # Load bitwarden cli config
 [ -f "$HOME/.config/bwcli" ] && source "$HOME/.config/bwcli"

@@ -1,0 +1,4 @@
+.dotfiles
+.config/bwcli
+.config/zsh/local
+.zcompdump
