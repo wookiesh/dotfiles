@@ -1,0 +1,22 @@
+# ls goodies
+if $(which eza >/dev/null); then
+    alias ls='eza'
+    alias l='ls'
+    alias ll='eza --long --header --git --group --group-directories-first -F -H'
+else
+    alias ls='ls -Fh --color'
+    alias l='ls'
+    alias ll='ls -l'
+fi
+alias la='l -a'
+alias lla='ll -a'
+
+# Others
+alias c='highlight'
+alias cpv='rsync -ah --info=progress2'
+alias flush_dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder" # TODO move to osx
+alias grep='grep --color'
+alias ports='lsof -n -i4TCP | grep LISTEN'
+alias wanip="curl http://ipecho.net/plain; echo"
+# git diff replacement with bells and whistles
+alias batdiff="git diff --name-only --relative --diff-filter=d | xargs bat --diff"

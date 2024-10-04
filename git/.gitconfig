@@ -1,0 +1,40 @@
+[user]
+name = Joseph Piron
+email = git@miom.be
+
+[core]
+quotepath = false
+excludesfile = ~/.gitignore_global
+
+[alias]
+ci = commit
+co = checkout
+br = branch
+co = checkout
+st = status
+lg = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s   %Cgreen(%an %ar)%Creset'
+msg = commit --allow-empty -m
+count = shortlog -sn
+undo = reset --soft HEAD^
+
+[color]
+ui = auto
+status = auto
+branch = auto
+diff = auto
+
+[help]
+autocorrect = 1
+
+[rerere]
+enabled = 1
+
+[init]
+defaultBranch = main
+
+[pull]
+rebase = true
+
+[push]
+atomic = true
+followTags = true

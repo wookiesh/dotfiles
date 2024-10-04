@@ -1,7 +1,11 @@
 # Makefile to easily copy the correct packages to linux, osx, etc systems.
 
 osx:
-	stow -vv --restow --target $$HOME --simulate */
+	stow --verbose --restow --target $$HOME */
 
 linux:
 	echo linux
+
+# Remove all stowed links
+delete:
+    stow --verbose --target=$$HOME --delete */

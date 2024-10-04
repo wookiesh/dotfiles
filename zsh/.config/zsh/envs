@@ -1,0 +1,30 @@
+export DOTFILES="$HOME/.dotfiles"
+
+export HISTFILE=$HOME/.cache/zsh/history # History filepath
+export HISTSIZE=10000                    # Maximum events for internal history
+export SAVEHIST=10000                    # Maximum events in history file
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+# local path
+path=("$HOME/.local/bin" $path)
+# export PATH=~/.local/bin:$PATH
+typeset -Ux path PATH # Unique, eXport
+
+# Nicer pager
+export BAT_THEME=Dracula
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+# editor
+export EDITOR="vim"
+export VISUAL="vim"
+
+# fzf, smaller and more beautiful
+export FZF_DEFAULT_OPTS='--height 60% --layout=reverse --border --preview "bat -n --color=always {}" --pointer ▶'
+
+# invoke and fabric
+export INVOKE_RUN_ECHO=1
+export INVOKE_RUN_PTY=1

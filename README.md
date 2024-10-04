@@ -35,7 +35,8 @@ stow . --target=$HOME
 ```
 ## TODO
 
-[ ] Create a makefile for linux, osx to stow the correct packages
+- [x] Create a makefile for linux, osx to stow the correct packages
+- [ ] Have a look at [Chez Moi](https://www.chezmoi.io/quick-start/)
 
 ## Reference
 - [still don't have a title](https://venthur.de/2021-12-19-managing-dotfiles-with-stow.html)
