@@ -8,4 +8,4 @@ linux:
 
 # Remove all stowed links
 delete:
-    stow --verbose --target=$$HOME --delete */
+	stow --verbose --target=$$HOME --delete */
