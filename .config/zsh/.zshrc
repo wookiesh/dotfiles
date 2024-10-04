@@ -14,22 +14,22 @@ eval "$(starship init zsh)"
 # | History |
 # +---------+
 
-setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
+setopt EXTENDED_HISTORY # Write the history file in the ':start:elapsed;command' format.
 # setopt SHARE_HISTORY             # Share history between all sessions.
-setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming history.
-setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again.
-setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
-setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
-setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
-setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
-setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
+setopt HIST_EXPIRE_DUPS_FIRST # Expire a duplicate event first when trimming history.
+setopt HIST_IGNORE_DUPS       # Do not record an event that was just recorded again.
+setopt HIST_IGNORE_ALL_DUPS   # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_FIND_NO_DUPS      # Do not display a previously found event.
+setopt HIST_IGNORE_SPACE      # Do not record an event starting with a space.
+setopt HIST_SAVE_NO_DUPS      # Do not write a duplicate event to the history file.
+setopt HIST_VERIFY            # Do not execute immediately upon history expansion.
 
 # +------------+
 # | COMPLETION |
 # +------------+
 
 # Should be called before compinit
-zmodload zsh/complist			# for menuselect
+zmodload zsh/complist # for menuselect
 
 # Basic auto/tab complete:
 fpath+=$ZDOTDIR/completions
@@ -43,13 +43,13 @@ zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 setopt correct # spelling correction for commands
 compinit
-_comp_options+=(globdots)		# Include hidden files.
+_comp_options+=(globdots) # Include hidden files.
 
 # +--------------+
 # | COMMAND LINE |
 # +--------------+
 
-bindkey -v # vi mode
+# bindkey -v # vi mode
 cursor_mode() {
     # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
     cursor_block='\e[2 q'
@@ -84,9 +84,10 @@ bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
-# bindkey -v '^?' backward-delete-char
-bindkey "^[^[[C" forward-word   # alt cursor right
-bindkey "^[^[[D" backward-word  # alt cursor left
+bindkey -v '^?' backward-delete-char
+bindkey -v
+bindkey "^[^[[C" forward-word  # alt cursor right
+bindkey "^[^[[D" backward-word # alt cursor left
 
 # Edit line in vim with ctrl-e:
 # autoload edit-command-line; zle -N edit-command-line
@@ -121,7 +122,7 @@ DIRSTACKFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dirs"
 mkdir -p $(dirname $DIRSTACKFILE)
 if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
 	dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
-	[[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}"
+	# [[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}" => to avoid starting in last folder
 fi
 chpwd_dirstack() {
 	print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
@@ -131,8 +132,8 @@ add-zsh-hook -Uz chpwd chpwd_dirstack
 DIRSTACKSIZE='20'
 
 setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
-setopt PUSHD_IGNORE_DUPS	# Remove duplicate entries
-setopt PUSHD_MINUS			# Reverts the +/- operators
+setopt PUSHD_IGNORE_DUPS # Remove duplicate entries
+setopt PUSHD_MINUS       # Reverts the +/- operators
 
 # +----------------+
 # | Git submodules |
@@ -146,8 +147,8 @@ source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 # | Fuzzy find |
 # +------------+
 # osx
-[ -f "/opt/homebrew/opt/fzf/shell/completion.zsh" ] && source /opt/homebrew/opt/fzf/shell/completion.zsh
-[ -f "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+[ -f "/opt/homebrew/opt/fzf/shell/completion.zsh" ] && source /opt/homebrew/opt/fzf/shell/completion.zsh || true
+[ -f "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh || true
 # linux
-[ -f "/usr/share/doc/fzf/examples/key-bindings.zsh" ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-[ -f "/usr/share/doc/fzf/examples/completion.zsh" ] && source /usr/share/doc/fzf/examples/completion.zsh
+[ -f "/usr/share/doc/fzf/examples/key-bindings.zsh" ] && source /usr/share/doc/fzf/examples/key-bindings.zsh || true
+[ -f "/usr/share/doc/fzf/examples/completion.zsh" ] && source /usr/share/doc/fzf/examples/completion.zsh || true
