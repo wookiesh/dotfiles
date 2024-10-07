@@ -1,7 +1,7 @@
 # Makefile to easily copy the correct packages to linux, osx, etc systems.
 
 osx:
-	stow --verbose --restow --target $$HOME */
+	stow --verbose --stow --target $$HOME */
 
 linux: osx
 
