@@ -104,9 +104,10 @@ bindkey "^[^[[D" backward-word # alt cursor left
 # Local configuration for the running host only
 # Should not be stowed/committed
 [ -f "$ZDOTDIR/local" ] && source "$ZDOTDIR/local"
+# OSX specific bits and get bitwarden session
+[ -f "$ZDOTDIR/osx" ] && [[ "$(uname -s)" == "Darwin" ]] && source "$ZDOTDIR/osx"
 
-# Load bitwarden cli config
-[ -f "$HOME/.config/bwcli" ] && source "$HOME/.config/bwcli"
+
 
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
 # export PATH=$PATH:/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin

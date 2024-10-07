@@ -4,34 +4,25 @@ This directory contains the dotfiles I like to share between the *nix systems I 
 
 ## Requirements
 
-### Git
-
-### Stow
-
-## HowTo
-
-Define a function `dtf`
+Install these package using the appropriate package manager:
 
 ```sh
-dtf () {
-	git --git-dir="$DOTFILES" --work-tree="$HOME" "$@"
-}
+sudo apt install git stow make eza
 ```
-
 ### Stow
 
 First, check out the fotfiles repo in the $HOME directory using git
 
 ```sh
-cd code
+mkdir -p code && cd code
 git clone git@github.com/wookiesh/dotfiles.git
 cd dotfiles
 ```
 
-then use GNU stow to create symlinks
+then use the correct tarket from the makefile:
 
 ```sh
-stow . --target=$HOME
+make linux
 ```
 ## TODO
 

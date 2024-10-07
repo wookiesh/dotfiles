@@ -1,22 +1,56 @@
-# ls goodies
-if $(which eza >/dev/null); then
-    alias ls='eza'
-    alias l='ls'
-    alias ll='eza --long --header --git --group --group-directories-first -F -H'
+# Set up enhanced directory listing commands based on the availability of 'eza'
+if command -v eza &>/dev/null; then
+    # Use 'eza' if available for better output
+    alias ls='eza'                                                               # Alias 'ls' to 'eza'
+    alias l='ls'                                                                 # Alias 'l' to 'ls'
+    alias ll='eza --long --header --git --group --group-directories-first -F -H' # Detailed listing
 else
-    alias ls='ls -Fh --color'
-    alias l='ls'
-    alias ll='ls -l'
+    # Fallback to standard 'ls' if 'eza' is not available
+    alias ls='ls -Fh --color' # Colorful, human-readable output
+    alias l='ls'              # Alias 'l' to 'ls'
+    alias ll='ls -l'          # Long format listing
 fi
-alias la='l -a'
-alias lla='ll -a'
 
-# Others
-alias c='highlight'
-alias cpv='rsync -ah --info=progress2'
-alias flush_dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder" # TODO move to osx
-alias grep='grep --color'
-alias ports='lsof -n -i4TCP | grep LISTEN'
-alias wanip="curl http://ipecho.net/plain; echo"
-# git diff replacement with bells and whistles
-alias batdiff="git diff --name-only --relative --diff-filter=d | xargs bat --diff"
+# Additional listing aliases
+alias la='l -a'   # List all files including hidden
+alias lla='ll -a' # Long listing of all files
+
+# Check if the 'docker' command is available and if the 'compose' subcommand is recognized
+if command -v docker &>/dev/null && docker compose version &>/dev/null; then
+    # Define Docker Compose commands if available
+    alias dcb='docker compose build'                            # Build services
+    alias dcdn='docker compose down'                            # Stop and remove containers
+    alias dce='docker compose exec'                             # Execute command in a running container
+    alias dck='docker compose kill'                             # Kill containers
+    alias dcl='docker compose logs'                             # View logs
+    alias dclf='docker compose logs -f'                         # View logs (follow)
+    alias dcls='docker compose ls'                              # List containers
+    alias dco='docker compose'                                  # Base command
+    alias dcp='docker compose pull'                             # Pull service images
+    alias dcps='docker compose ps'                              # List containers
+    alias dcr='docker compose run'                              # Run a command in a new container
+    alias dcrestart='docker compose restart'                    # Restart services
+    alias dcrm='docker compose rm'                              # Remove stopped containers
+    alias dcstart='docker compose start'                        # Start services
+    alias dcstop='docker compose stop'                          # Stop services
+    alias dcu='docker compose up --remove-orphans'              # Start services and remove orphaned containers
+    alias dcub='docker compose up --build --remove-orphans'     # Build images before starting services
+    alias dcud='docker compose up -d --remove-orphans'          # Start services in detached mode
+    alias dcudb='docker compose up -d --build --remove-orphans' # Build images and start in detached mode
+fi
+
+# Miscellaneous aliases
+alias c='highlight'                        # Highlight command
+alias cpv='rsync -ah --info=progress2'     # Copy files with progress display
+alias grep='grep --color'                  # Colorize grep output
+alias ports='lsof -n -i4TCP | grep LISTEN' # Show listening TCP ports
+
+# IP-related aliases
+alias ips="get_ip_info"                          # Custom command for getting IP info
+alias wanip="curl http://ipecho.net/plain; echo" # Get WAN IP
+
+# Git diff replacement with enhanced viewing
+alias batdiff="git diff --name-only --relative --diff-filter=d | xargs bat --diff" # View git diffs with bat
+
+# Apt related
+command -v apt &>/dev/null && alias update='sudo apt update && sudo apt upgrade'

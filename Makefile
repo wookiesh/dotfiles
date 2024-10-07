@@ -3,8 +3,7 @@
 osx:
 	stow --verbose --restow --target $$HOME */
 
-linux:
-	echo linux
+linux: osx
 
 # Remove all stowed links
 delete:

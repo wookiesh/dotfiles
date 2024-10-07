@@ -1,0 +1,98 @@
+## Aliases
+
+alias flush_dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder" # Flush DNS cache
+
+## Functions
+
+# Update Homebrew, Mac App Store apps, and check for system updates
+update() {
+    echo 'Starting update process...'
+
+    echo 'Updating Homebrew...'
+    if brew update && brew upgrade && brew cleanup; then
+        echo 'Homebrew updated successfully.'
+    else
+        echo 'Homebrew update failed.' >&2
+        return 1
+    fi
+
+    echo 'Updating Mac App Store apps...'
+    if mas upgrade; then
+        echo 'Mac App Store apps updated successfully.'
+    else
+        echo 'Mac App Store update failed.' >&2
+        return 1
+    fi
+
+    echo 'Checking for Apple system updates...'
+    if /usr/sbin/softwareupdate -ia; then
+        echo 'Apple system updates completed successfully.'
+    else
+        echo 'Apple system updates failed.' >&2
+        return 1
+    fi
+}
+
+# Unlock bitwarden vault and persist session
+function bwu() {
+    export NODE_OPTIONS=--no-deprecation # to be removed at some point...
+
+    # Retrieve the existing session from the Keychain
+    local keychain_session=$(security find-generic-password -a "bitwarden" -s "bw_session" -w 2>/dev/null)
+
+    if [[ -n "$keychain_session" ]]; then
+        echo "Using existing Bitwarden session from Keychain..."
+        export BW_SESSION="$keychain_session"
+    fi
+
+    # Get the current status of the Bitwarden session
+    BW_STATUS=$(bw status | jq -r .status)
+
+    case "$BW_STATUS" in
+    "unauthenticated")
+        echo "Logging into Bitwarden..."
+        export BW_SESSION=$(bw login --raw)
+
+        if [[ -n "$BW_SESSION" ]]; then
+            # Store the session in the Keychain
+            security add-generic-password -a "bitwarden" -s "bw_session" -w "$BW_SESSION"
+            echo "Session stored in Keychain."
+        else
+            echo "Failed to log in to Bitwarden."
+            return 1
+        fi
+        ;;
+
+    "locked")
+        echo "Unlocking Bitwarden Vault..."
+        export BW_SESSION=$(bw unlock --raw)
+
+        if [[ -n "$BW_SESSION" ]]; then
+            # Update the session in the Keychain
+            security add-generic-password -a "bitwarden" -s "bw_session" -w "$BW_SESSION" -U
+            echo "Session updated in Keychain."
+        else
+            echo "Failed to unlock Bitwarden vault."
+            return 1
+        fi
+        ;;
+
+    "unlocked")
+        echo "Vault is already unlocked."
+        ;;
+
+    *)
+        echo "Unknown Login Status: $BW_STATUS"
+        return 1
+        ;;
+    esac
+
+    # Sync the vault to ensure data is up to date
+    bw sync
+}
+
+# Retrieve the existing session from the Keychain
+local keychain_session=$(security find-generic-password -a "bitwarden" -s "bw_session" -w 2>/dev/null)
+if [[ -n "$keychain_session" ]]; then
+    export BW_SESSION="$keychain_session"
+fi

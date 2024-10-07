@@ -1,70 +1,42 @@
-rcd () {
-    tmp="$(mktemp)"
-    ranger --choosedir="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp"
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
+# Run 'yazi' with specified arguments and change to the directory returned by 'yazi'
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" # Create a temporary file for the cwd
+    yazi "$@" --cwd-file="$tmp"                # Run 'yazi' with the temp file for cwd storage
+
+    # If the cwd is different and valid, change to it
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd" # Change directory to the new one
     fi
-} # TODO replace with yazi
 
-rcode() { code --folder-uri=vscode-remote://ssh-remote+$1/$2 }
-
-vpn() {
-
+    rm -f -- "$tmp" # Clean up the temporary file
 }
 
-# Update brew, fish, fisher and mac app store
-update() {
-    echo 'start updating ...'
-
-    echo 'updating homebrew'
-    brew update
-    brew upgrade
-    brew cleanup
-
-    echo 'updating fish shell'
-    fisher update
-    fish_update_completions
-
-    echo 'updating apple store apps'
-    echo 'checking Apple Updates'
-    /usr/sbin/softwareupdate -ia
+# Open a remote folder in VS Code via SSH
+# Usage: rcode <ssh_host> <path_to_directory>
+rcode() {
+    code --folder-uri=vscode-remote://ssh-remote+$1/$2
 }
 
-
-# Unlock bitwarden vault and persist session
-function bwu() {
-    BW_STATUS=$(bw status | jq -r .status)
-    case "$BW_STATUS" in
-    "unauthenticated")
-        echo "Logging into BitWarden"
-        export BW_SESSION=$(bw login --raw)
-        echo "export BW_SESSION=$BW_SESSION" > ~/.config/bwcli # or dangerous ? => bw lock
-        ;;
-    "locked")
-        echo "Unlocking Vault"
-        export BW_SESSION=$(bw unlock --raw)
-        echo "export BW_SESSION=$BW_SESSION" > ~/.config/bwcli # or dangerous ? => bw lock
-        ;;
-    "unlocked")
-        echo "Vault is unlocked"
-        ;;
-    *)
-        echo "Unknown Login Status: $BW_STATUS"
-        return 1
-        ;;
-    esac
-    bw sync
-}
-
-# display a neatly formatted path
+# Display a neatly formatted and color-coded PATH variable
 path() {
-  echo $PATH | tr ":" "\n" | \
-    awk "{ sub(\"/usr\",   \"$fg_no_bold[green]/usr$reset_color\"); \
+    echo $PATH | tr ":" "\n" |
+        awk "{ sub(\"/usr\",   \"$fg_no_bold[green]/usr$reset_color\"); \
            sub(\"/bin\",   \"$fg_no_bold[blue]/bin$reset_color\"); \
            sub(\"/opt\",   \"$fg_no_bold[cyan]/opt$reset_color\"); \
            sub(\"/sbin\",  \"$fg_no_bold[magenta]/sbin$reset_color\"); \
            sub(\"/local\", \"$fg_no_bold[yellow]/local$reset_color\"); \
            print }"
+}
+
+# Function to get interface, IPv4 address, and netmask
+get_ip_info() {
+    if command -v ip &>/dev/null; then
+        # Use ip command
+        ip addr | awk '/^[0-9]+: [a-z]/ {iface=$2} /inet / {split($2, a, "/"); mask=32-a[2]; print iface ": " a[1] " / " (mask == 0 ? "255.255.255.255" : mask)}'
+    elif command -v ifconfig &>/dev/null; then
+        # Use ifconfig command, skip IPv6 and handle POINTOPOINT
+        ifconfig | awk '/^[a-z]/ {iface=$1} /inet / && !/inet6/ {if ($3 == "-->") {print iface ": " $2 " / " $6} else {print iface ": " $2 " / " $4}}'
+    else
+        echo "Neither ip nor ifconfig command found"
+    fi
 }
