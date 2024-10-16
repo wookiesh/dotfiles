@@ -33,7 +33,7 @@ update() {
     fi
 }
 
-# Unlock bitwarden vault and persist session
+# Unlock bitwarden vault and persist session in keychain
 function bwu() {
     export NODE_OPTIONS=--no-deprecation # to be removed at some point...
 

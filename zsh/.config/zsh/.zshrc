@@ -1,3 +1,37 @@
+# +----------------------+
+# | Miscelleanous things |
+# +----------------------+
+
+# Record the current time in milliseconds
+# Use 'gdate' on macOS, and 'date' on Linux
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  date_cmd="gdate"
+else
+  date_cmd="date"
+fi
+start_time=$($date_cmd +%s%3N)
+
+# Function to check if the file needs to be compiled and source the compiled version
+zsh_compile_if_needed() {
+  local src_file="$1"
+  local compiled_file="${src_file}.zwc"
+
+  # Check if the compiled file doesn't exist or if the source file is newer than the compiled file
+  if [[ ! -f $compiled_file || $src_file -nt $compiled_file ]]; then
+    echo "Compiling $src_file..."
+    zcompile $src_file $compiled_file
+  fi
+
+  # Source the compiled file if it exists and is up-to-date
+  if [[ -f $compiled_file ]]; then
+    echo source $compiled_file
+    source $compiled_file
+    return  # Exit to prevent double sourcing
+  fi
+}
+# Finally a great idea but does not seem to work,
+# zmodload zsh/zprof && zprof can help to check for time bottlenecks
+
 # +-------------------+
 # | Prompt and colors |
 # +-------------------+
@@ -31,19 +65,32 @@ setopt HIST_VERIFY            # Do not execute immediately upon history expansio
 # Should be called before compinit
 zmodload zsh/complist # for menuselect
 
+# completion for tools installed with brew
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
 # Basic auto/tab complete:
 fpath+=$ZDOTDIR/completions
-autoload -Uz compinit
+fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+
 zstyle ':completion:*' menu select
 
-# Fallback to built in ls colors
+# Enable caching for completion to improve performance.
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completion"
+# Add useful and improved styles for various completions.
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-colors ''
-zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u' # Colorful descriptions
 # Add simple colors to kill
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
 setopt correct # spelling correction for commands
-compinit
 _comp_options+=(globdots) # Include hidden files.
+autoload -Uz compinit && compinit
 
 # +--------------+
 # | COMMAND LINE |
@@ -96,18 +143,15 @@ bindkey "^[^[[D" backward-word # alt cursor left
 # +-------------+
 # | Other stuff |
 # +-------------+
-
-# Load aliases and shortcuts if existent.
+zmodload zsh/zprof
+# Load aliases and shortcuts
 [ -f "$ZDOTDIR/aliases" ] && source "$ZDOTDIR/aliases"
 [ -f "$ZDOTDIR/envs" ] && source "$ZDOTDIR/envs"
 [ -f "$ZDOTDIR/functions" ] && source "$ZDOTDIR/functions"
-# Local configuration for the running host only
-# Should not be stowed/committed
+# Local configuration for the running host only => Should not be stowed/committed
 [ -f "$ZDOTDIR/local" ] && source "$ZDOTDIR/local"
 # OSX specific bits and get bitwarden session
 [ -f "$ZDOTDIR/osx" ] && [[ "$(uname -s)" == "Darwin" ]] && source "$ZDOTDIR/osx"
-
-
 
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh" || true
 # export PATH=$PATH:/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/bin
@@ -121,11 +165,22 @@ bindkey "^[^[[D" backward-word # alt cursor left
 
 autoload -Uz add-zsh-hook
 
+# Define dirstack cache location
 DIRSTACKFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dirs"
-mkdir -p $(dirname $DIRSTACKFILE)
+mkdir -p "$(dirname "$DIRSTACKFILE")"
+
+# Restore dirstack from the file if it exists and dirstack is empty
 if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
-	dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
-	# [[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}" => to avoid starting in last folder
+    # Read the file and populate dirstack array
+    dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
+
+    # Only `cd` if dirstack[1] exists and is a valid directory
+    if [[ -n "${dirstack[1]}" && -d "${dirstack[1]}" ]]; then
+        cd -- "${dirstack[1]}"
+    else
+        # Optional: Fallback to home directory if dirstack[1] is invalid
+        cd ~
+    fi
 fi
 chpwd_dirstack() {
 	print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
@@ -139,19 +194,30 @@ setopt PUSHD_IGNORE_DUPS # Remove duplicate entries
 setopt PUSHD_MINUS       # Reverts the +/- operators
 
 # +----------------+
-# | Git submodules |
+# | Other plugins |
 # +----------------+
 
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 source $ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# +------------+
-# | Fuzzy find |
-# +------------+
-# osx
-[ -f "/opt/homebrew/opt/fzf/shell/completion.zsh" ] && source /opt/homebrew/opt/fzf/shell/completion.zsh || true
-[ -f "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh || true
-# linux
-[ -f "/usr/share/doc/fzf/examples/key-bindings.zsh" ] && source /usr/share/doc/fzf/examples/key-bindings.zsh || true
-[ -f "/usr/share/doc/fzf/examples/completion.zsh" ] && source /usr/share/doc/fzf/examples/completion.zsh || true
+# # Fuzzy find
+# if [[ "$OSTYPE" == "darwin"* ]]; then
+#     [ -f "/opt/homebrew/opt/fzf/shell/completion.zsh" ] && source /opt/homebrew/opt/fzf/shell/completion.zsh || true
+#     [ -f "/opt/homebrew/opt/fzf/shell/key-bindings.zsh" ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh || true
+# else
+    # [ -f "/usr/share/doc/fzf/examples/key-bindings.zsh" ] && source /usr/share/doc/fzf/examples/key-bindings.zsh || true
+    # [ -f "/usr/share/doc/fzf/examples/completion.zsh" ] && source /usr/share/doc/fzf/examples/completion.zsh || true
+# fi
+
+# Atuin (brew install to get the hand on the config)
+eval "$(atuin init zsh --disable-up-arrow)" # TODO: retirer fzf ?
+# eval "$(atuin init zsh)" # TODO: retirer fzf ?
+
+# Zoxide, a better cd
+eval "$(zoxide init zsh)"
+alias cd="z"
+
+# and finally, calculate the elapsed time
+end_time=$($date_cmd +%s%3N)
+elapsed_time=$((end_time - start_time))
+echo "Sourcing .zshrc took ${elapsed_time} milliseconds."
