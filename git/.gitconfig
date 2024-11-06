@@ -38,3 +38,9 @@ rebase = true
 [push]
 atomic = true
 followTags = true
+[commit]
+	gpgsign = false
+[tag]
+	gpgSign = false
+[gpg]
+	program = gpg2

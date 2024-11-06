@@ -174,13 +174,13 @@ if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
     # Read the file and populate dirstack array
     dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
 
-    # Only `cd` if dirstack[1] exists and is a valid directory
-    if [[ -n "${dirstack[1]}" && -d "${dirstack[1]}" ]]; then
-        cd -- "${dirstack[1]}"
-    else
-        # Optional: Fallback to home directory if dirstack[1] is invalid
-        cd ~
-    fi
+    # # Only `cd` if dirstack[1] exists and is a valid directory
+    # if [[ -n "${dirstack[1]}" && -d "${dirstack[1]}" ]]; then
+    #     cd -- "${dirstack[1]}"
+    # else
+    #     # Optional: Fallback to home directory if dirstack[1] is invalid
+    #     cd ~
+    # fi
 fi
 chpwd_dirstack() {
 	print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
