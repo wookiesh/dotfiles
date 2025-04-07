@@ -6,7 +6,7 @@ export ZDOTDIR=$HOME/.config/zsh
 export DOTFILES="$HOME/code/dotfiles"
 
 # Ensure necessary dirs exist
-mkdir -p "$HOME/{.config,.cache}/zsh"
+mkdir -p $HOME/{.config,.cache}/zsh
 
 # editor
 export EDITOR="vim"
