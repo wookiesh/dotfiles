@@ -136,26 +136,6 @@ fi
 # FZF
 [[ -f "$ZDOTDIR/fzf" ]] && source "$ZDOTDIR/fzf"
 
-# =============================
-# === 📁 Recent Directories ===
-# =============================
-
-autoload -Uz add-zsh-hook
-DIRSTACKFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/dirs"
-mkdir -p "$(dirname "$DIRSTACKFILE")"
-
-if [[ -f "$DIRSTACKFILE" && ${#dirstack} -eq 0 ]]; then
-  dirstack=("${(@f)$(<"$DIRSTACKFILE")}")
-fi
-
-chpwd_dirstack() {
-  print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
-}
-add-zsh-hook -Uz chpwd chpwd_dirstack
-
-setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME PUSHD_IGNORE_DUPS PUSHD_MINUS
-DIRSTACKSIZE=20
-
 # =======================
 # === 🧪 Local Hooks ===
 # =======================
