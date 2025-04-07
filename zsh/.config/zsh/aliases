@@ -115,6 +115,9 @@ alias ports='lsof -n -i4TCP | grep LISTEN' # Show listening TCP ports
 alias ips="get_ip_info"                          # Custom command for getting IP info
 alias wanip="curl http://ipecho.net/plain; echo" # Get WAN IP
 
+# Batcat aliasing when not used from brew
+command -v batcat >/dev/null && ! command -v bat >/dev/null && echo "alias bat=batcat"
+
 # Git diff replacement with enhanced viewing
 alias batdiff="git diff --name-only --relative --diff-filter=d | xargs bat --diff" # View git diffs with bat
 
