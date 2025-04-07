@@ -62,7 +62,10 @@ if command -v brew >/dev/null; then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-autoload -Uz compinit && compinit
+# Relocate zcompdump
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/.zcompdump"
+
+autoload -Uz compinit && compinit -d "$ZSH_COMPDUMP"
 _comp_options+=(globdots)
 
 zstyle ':completion:*' menu select
