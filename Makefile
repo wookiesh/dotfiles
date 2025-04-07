@@ -3,7 +3,8 @@
 osx:
 	stow --verbose --stow --target $$HOME */
 
-linux: osx
+linux:
+	stow --verbose --stow --target $$HOME zsh vim tmux starship git
 
 # Remove all stowed links
 delete:

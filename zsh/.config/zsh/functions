@@ -18,7 +18,7 @@ rcode() {
 }
 
 # Display a neatly formatted and color-coded PATH variable
-path() {
+paths() {
     echo $PATH | tr ":" "\n" |
         awk "{ sub(\"/usr\",   \"$fg_no_bold[green]/usr$reset_color\"); \
            sub(\"/bin\",   \"$fg_no_bold[blue]/bin$reset_color\"); \

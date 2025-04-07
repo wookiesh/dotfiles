@@ -5,6 +5,9 @@
 export ZDOTDIR=$HOME/.config/zsh
 export DOTFILES="$HOME/code/dotfiles"
 
+# Ensure necessary dirs exist
+mkdir -p "$HOME/{.config,.cache}/zsh"
+
 # editor
 export EDITOR="vim"
 export VISUAL="vim"
@@ -15,5 +18,5 @@ export HISTSIZE=10000                    # Maximum events for internal history
 export SAVEHIST=10000                    # Maximum events in history file
 
 # local path
-path=("$HOME/.local/bin" $path)
+path=("$HOME/.local/bin" "$path[@]")
 typeset -Ux path PATH # Unique, eXport

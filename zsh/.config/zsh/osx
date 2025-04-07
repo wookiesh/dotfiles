@@ -4,6 +4,15 @@ alias flush_dns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder" 
 
 ## Functions
 
+# Forticlient vpn
+vpn() {
+    echo "search ana.lu airportlu.local" | sudo tee /etc/resolver/ana
+    echo "domain airportlu.local" | sudo tee -a /etc/resolver/ana
+    sudo openfortivpn -c ~/.config/openfortivpn/config
+    sudo rm /etc/resolver/ana
+    flush_dns
+}
+
 # Update Homebrew, Mac App Store apps, and check for system updates
 update() {
     echo 'Starting update process...'
