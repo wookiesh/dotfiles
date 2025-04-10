@@ -3,7 +3,7 @@
 # =========================
 
 export ZDOTDIR="$HOME/.config/zsh"
-export DOTFILES="$HOME/code/dotfiles"
+export DOTFILES="$HOME/dev/dotfiles"
 export EDITOR="vim"
 export VISUAL="vim"
 export HISTFILE="$HOME/.cache/zsh/history"

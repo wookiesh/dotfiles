@@ -7,6 +7,13 @@ add_newline = true
 # Directory on second line
 # format = '$all$directory$character'
 
+# # Example with fill and right aligned details
+# format = """$sudo$username$hostname$directory$git_branch$git_commit$git_state$git_status\
+# $fill\
+# $jobs$status$cmd_duration\
+# $os$python$nodejs$docker_context$golang$time\
+# \n$character"""
+
 [battery]
 full_symbol = "🔋"
 charging_symbol = "🔌"
@@ -31,7 +38,7 @@ format = '[$ssh_symbol$hostname]($style) '
 
 [directory]
 truncate_to_repo = false
-truncation_length = 3   # parent directories to show; default is 3
+truncation_length = 3 # parent directories to show; default is 3
 truncation_symbol = "…/"
 format = 'in [$path]($style)[$read_only]($read_only_style) '
 
