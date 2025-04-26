@@ -105,3 +105,6 @@ local keychain_session=$(security find-generic-password -a "bitwarden" -s "bw_se
 if [[ -n "$keychain_session" ]]; then
     export BW_SESSION="$keychain_session"
 fi
+
+# Annoying mtr workaround for osx
+alias mtr='sudo mtr'

@@ -154,4 +154,8 @@ fi
 # ===========================
 
 end_time=$($date_cmd +%s%3N)
-echo "⏱️  .zshrc sourced in $((end_time - start_time))ms"
+duration=$((end_time - start_time))
+
+if (( duration > 300 )); then
+  echo "⏱️  .zshrc sourced in ${duration}ms"
+fi
