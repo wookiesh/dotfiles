@@ -12,6 +12,30 @@ export SAVEHIST=10000
 typeset -gU path PATH
 path=("$HOME/.local/bin" $path)
 
+# =========================
+# === Node Version Manager (nvm) ===
+# =========================
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"          # Load nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Load nvm bash completion
+
+# Automatically switch Node version based on .nvmrc
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local nvmrc_path
+  nvmrc_path="$(nvm_find_nvmrc)"
+  if [ -n "$nvmrc_path" ]; then
+    local nvm_version
+    nvm_version="$(cat "$nvmrc_path")"
+    if [ "$(nvm current)" != "$nvm_version" ]; then
+      nvm use --silent
+    fi
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
 # ============================
 # === ⏱️ Startup Timing ===
 # ============================
@@ -126,6 +150,7 @@ if [[ -f "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
 fi
 
 # Atuin
+path+=("$HOME/.atuin/bin")  # Ensure atuin is in PATH
 if command -v atuin &>/dev/null; then
   eval "$(atuin init zsh --disable-up-arrow)"
 fi

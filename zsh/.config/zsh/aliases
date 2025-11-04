@@ -17,6 +17,7 @@ alias lla='ll -a' # Long listing of all files
 
 # Check if the 'docker' command is available and if the 'compose' subcommand is recognized
 if command -v docker &>/dev/null && docker compose version &>/dev/null; then
+    alias dps='docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}" | sort'
     # Define Docker Compose commands if available
     alias dcb='docker compose build'                            # Build services
     alias dcdn='docker compose down'                            # Stop and remove containers
