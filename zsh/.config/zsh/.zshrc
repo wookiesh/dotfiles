@@ -17,24 +17,31 @@ path=("$HOME/.local/bin" $path)
 # =========================
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"          # Load nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Load nvm bash completion
+# Load nvm only if the nvm script exists
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # shellcheck disable=SC1090
+  source "$NVM_DIR/nvm.sh"          # Load nvm
+  [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"  # Load nvm bash completion
 
-# Automatically switch Node version based on .nvmrc
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local nvmrc_path
-  nvmrc_path="$(nvm_find_nvmrc)"
-  if [ -n "$nvmrc_path" ]; then
-    local nvm_version
-    nvm_version="$(cat "$nvmrc_path")"
-    if [ "$(nvm current)" != "$nvm_version" ]; then
-      nvm use --silent
-    fi
+  # Define and enable automatic switching only if helper function exists
+  if command -v nvm_find_nvmrc >/dev/null 2>&1; then
+    # Automatically switch Node version based on .nvmrc
+    autoload -U add-zsh-hook
+    load-nvmrc() {
+      local nvmrc_path
+      nvmrc_path="$(nvm_find_nvmrc)"
+      if [ -n "$nvmrc_path" ]; then
+        local nvm_version
+        nvm_version="$(cat "$nvmrc_path")"
+        if [ "$(nvm current)" != "$nvm_version" ]; then
+          nvm use --silent
+        fi
+      fi
+    }
+    add-zsh-hook chpwd load-nvmrc
+    load-nvmrc
   fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+fi
 
 # ============================
 # === ⏱️ Startup Timing ===
